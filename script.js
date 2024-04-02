@@ -1,3 +1,4 @@
+const formEl = document.querySelector(".form");
 const textareaEl = document.querySelector(".form__textarea");
 const counterEl = document.querySelector(".counter");
 
@@ -9,3 +10,12 @@ const inputHandler = () => {
 };
 
 textareaEl.addEventListener("input", inputHandler);
+
+const submitHandler = (event) => {
+  event.preventDefault();
+
+  // get text from tex area
+  const text = textareaEl.value;
+};
+
+formEl.addEventListener("submit", submitHandler);
