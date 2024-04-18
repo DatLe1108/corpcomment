@@ -8,6 +8,27 @@ const feedbackListEl = document.querySelector(".feedbacks");
 const submitBtnEl = document.querySelector(".submit-btn");
 const spinnerEl = document.querySelector(".spinner");
 
+const renderFeedbackItem = (feedbackItem) => {
+  const feedBackItemHTML = `<li class="feedback">
+  <button class="upvote">
+      <i class="fa-solid fa-caret-up upvote__icon"></i>
+      <span class="upvote__count">${feedbackItem.upvoteCount}</span>
+  </button>
+  <section class="feedback__badge">
+      <p class="feedback__letter">${feedbackItem.badgeLetter}</p>
+  </section>
+  <div class="feedback__content">
+      <p class="feedback__company">${feedbackItem.company}</p>
+      <p class="feedback__text">${feedbackItem.text}</p>
+  </div>
+  <p class="feedback__date">${
+    feedbackItem.daysAgo === 0 ? "NEW" : `${feedbackItem.daysAgo}d`
+  }</p>
+</li>`;
+
+  feedbackListEl.insertAdjacentHTML("beforeend", feedBackItemHTML);
+};
+
 const inputHandler = () => {
   const maxNurChars = MAX_CHARS;
   const nrCharsTyped = textareaEl.value.length;
@@ -47,22 +68,7 @@ const submitHandler = (event) => {
   const upvoteCount = 0;
   const daysAgo = 0;
 
-  const feedBackItemHTML = `<li class="feedback">
-  <button class="upvote">
-      <i class="fa-solid fa-caret-up upvote__icon"></i>
-      <span class="upvote__count">${upvoteCount}</span>
-  </button>
-  <section class="feedback__badge">
-      <p class="feedback__letter">${badgeLetter}</p>
-  </section>
-  <div class="feedback__content">
-      <p class="feedback__company">${company}</p>
-      <p class="feedback__text">${text}</p>
-  </div>
-  <p class="feedback__date">${daysAgo === 0 ? "NEW" : `${daysAgo}d`}</p>
-</li>`;
-
-  feedbackListEl.insertAdjacentHTML("beforeend", feedBackItemHTML);
+  renderFeedbackItem({ hashtag, company, badgeLetter, upvoteCount, daysAgo });
 
   textareaEl.value = "";
 
@@ -82,24 +88,7 @@ fetch("https://bytegrad.com/course-assets/js/1/api/feedbacks")
     spinnerEl.remove();
 
     data.feedbacks.forEach((feedbackItem) => {
-      const feedBackItemHTML = `<li class="feedback">
-      <button class="upvote">
-          <i class="fa-solid fa-caret-up upvote__icon"></i>
-          <span class="upvote__count">${feedbackItem.upvoteCount}</span>
-      </button>
-      <section class="feedback__badge">
-          <p class="feedback__letter">${feedbackItem.badgeLetter}</p>
-      </section>
-      <div class="feedback__content">
-          <p class="feedback__company">${feedbackItem.company}</p>
-          <p class="feedback__text">${feedbackItem.text}</p>
-      </div>
-      <p class="feedback__date">${
-        feedbackItem.daysAgo === 0 ? "NEW" : `${feedbackItem.daysAgo}d`
-      }</p>
-    </li>`;
-
-      feedbackListEl.insertAdjacentHTML("beforeend", feedBackItemHTML);
+      renderFeedbackItem(feedbackItem);
     });
   })
   .catch((error) => {
