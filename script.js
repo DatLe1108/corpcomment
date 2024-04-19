@@ -1,5 +1,6 @@
 //global
 const MAX_CHARS = 150;
+const API_URL = "https://bytegrad.com/course-assets/js/1/api/feedbacks";
 
 const formEl = document.querySelector(".form");
 const textareaEl = document.querySelector(".form__textarea");
@@ -80,7 +81,8 @@ const submitHandler = (event) => {
 formEl.addEventListener("submit", submitHandler);
 
 //feedback list component
-fetch("https://bytegrad.com/course-assets/js/1/api/feedbacks")
+
+fetch(API_URL)
   .then((response) => {
     return response.json();
   })
