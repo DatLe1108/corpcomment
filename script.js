@@ -110,6 +110,28 @@ const submitHandler = (event) => {
 formEl.addEventListener("submit", submitHandler);
 
 //feedback list component
+const clickHandler = (event) => {
+  const clickEl = event.target;
+
+  const upvoteIntention = clickEl.className.includes("upvote");
+
+  if (upvoteIntention) {
+    const upvoteBtnEl = clickEl.closest(".upvote");
+    upvoteBtnEl.disabled = true;
+
+    const upvoteCountEl = upvoteBtnEl.querySelector(".upvote__count");
+
+    let upvoteCount = +upvoteBtnEl.textContent;
+
+    upvoteCount = upvoteCount + 1;
+
+    upvoteCountEl.textContent = upvoteCount;
+  } else {
+    clickEl.closest(".feedback").classList.toggle("feedback--expand");
+  }
+};
+
+feedbackListEl.addEventListener("click", clickHandler);
 
 fetch(API_URL)
   .then((response) => {
