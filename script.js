@@ -69,7 +69,36 @@ const submitHandler = (event) => {
   const upvoteCount = 0;
   const daysAgo = 0;
 
-  renderFeedbackItem({ hashtag, company, badgeLetter, upvoteCount, daysAgo });
+  const feedbackItem = {
+    hashtag,
+    text,
+    company,
+    badgeLetter,
+    upvoteCount,
+    daysAgo,
+  };
+
+  renderFeedbackItem(feedbackItem);
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(feedbackItem),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("st went wrong");
+        return;
+      }
+
+      console.log("done!");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   textareaEl.value = "";
 
