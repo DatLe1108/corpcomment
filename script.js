@@ -8,6 +8,7 @@ const counterEl = document.querySelector(".counter");
 const feedbackListEl = document.querySelector(".feedbacks");
 const submitBtnEl = document.querySelector(".submit-btn");
 const spinnerEl = document.querySelector(".spinner");
+const hashtagListEl = document.querySelector(".hashtags");
 
 const renderFeedbackItem = (feedbackItem) => {
   const feedBackItemHTML = `<li class="feedback">
@@ -147,3 +148,34 @@ fetch(API_URL)
   .catch((error) => {
     feedbackListEl.textContent = `Failed to fetch feedback items. Error message: ${error.message}`;
   });
+
+//hashtag list component
+const clickHandler2 = (event) => {
+  const clickedEl = event.target;
+
+  if (clickedEl.className === "hashtags") {
+    return;
+  }
+
+  const companyFromHashtag = clickedEl.textContent
+    .substring(1)
+    .toLowerCase()
+    .trim();
+
+  const loopingNode = Array.from(feedbackListEl.childNodes);
+
+  loopingNode.forEach((childNode) => {
+    if (childNode.nodeType === 3) return;
+
+    const companyNameFromFeedbackItem = childNode
+      .querySelector(".feedback__company")
+      .textContent.toLowerCase()
+      .trim();
+
+    if (companyFromHashtag !== companyNameFromFeedbackItem) {
+      childNode.remove();
+    }
+  });
+};
+
+hashtagListEl.addEventListener("click", clickHandler2);
