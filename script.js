@@ -111,71 +111,77 @@ const submitHandler = (event) => {
 formEl.addEventListener("submit", submitHandler);
 
 //feedback list component
-const clickHandler = (event) => {
-  const clickEl = event.target;
 
-  const upvoteIntention = clickEl.className.includes("upvote");
+(() => {
+  const clickHandler = (event) => {
+    const clickEl = event.target;
 
-  if (upvoteIntention) {
-    const upvoteBtnEl = clickEl.closest(".upvote");
-    upvoteBtnEl.disabled = true;
+    const upvoteIntention = clickEl.className.includes("upvote");
 
-    const upvoteCountEl = upvoteBtnEl.querySelector(".upvote__count");
+    if (upvoteIntention) {
+      const upvoteBtnEl = clickEl.closest(".upvote");
+      upvoteBtnEl.disabled = true;
 
-    let upvoteCount = +upvoteBtnEl.textContent;
+      const upvoteCountEl = upvoteBtnEl.querySelector(".upvote__count");
 
-    upvoteCount = upvoteCount + 1;
+      let upvoteCount = +upvoteBtnEl.textContent;
 
-    upvoteCountEl.textContent = upvoteCount;
-  } else {
-    clickEl.closest(".feedback").classList.toggle("feedback--expand");
-  }
-};
+      upvoteCount = upvoteCount + 1;
 
-feedbackListEl.addEventListener("click", clickHandler);
-
-fetch(API_URL)
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    spinnerEl.remove();
-
-    data.feedbacks.forEach((feedbackItem) => {
-      renderFeedbackItem(feedbackItem);
-    });
-  })
-  .catch((error) => {
-    feedbackListEl.textContent = `Failed to fetch feedback items. Error message: ${error.message}`;
-  });
-
-//hashtag list component
-const clickHandler2 = (event) => {
-  const clickedEl = event.target;
-
-  if (clickedEl.className === "hashtags") {
-    return;
-  }
-
-  const companyFromHashtag = clickedEl.textContent
-    .substring(1)
-    .toLowerCase()
-    .trim();
-
-  const loopingNode = Array.from(feedbackListEl.childNodes);
-
-  loopingNode.forEach((childNode) => {
-    if (childNode.nodeType === 3) return;
-
-    const companyNameFromFeedbackItem = childNode
-      .querySelector(".feedback__company")
-      .textContent.toLowerCase()
-      .trim();
-
-    if (companyFromHashtag !== companyNameFromFeedbackItem) {
-      childNode.remove();
+      upvoteCountEl.textContent = upvoteCount;
+    } else {
+      clickEl.closest(".feedback").classList.toggle("feedback--expand");
     }
-  });
-};
+  };
 
-hashtagListEl.addEventListener("click", clickHandler2);
+  feedbackListEl.addEventListener("click", clickHandler);
+
+  fetch(API_URL)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      spinnerEl.remove();
+
+      data.feedbacks.forEach((feedbackItem) => {
+        renderFeedbackItem(feedbackItem);
+      });
+    })
+    .catch((error) => {
+      feedbackListEl.textContent = `Failed to fetch feedback items. Error message: ${error.message}`;
+    });
+})()(
+  //hashtag list component
+
+  () => {
+    const clickHandler = (event) => {
+      const clickedEl = event.target;
+
+      if (clickedEl.className === "hashtags") {
+        return;
+      }
+
+      const companyFromHashtag = clickedEl.textContent
+        .substring(1)
+        .toLowerCase()
+        .trim();
+
+      const loopingNode = Array.from(feedbackListEl.childNodes);
+
+      loopingNode.forEach((childNode) => {
+        if (childNode.nodeType === 3) return;
+
+        const companyNameFromFeedbackItem = childNode
+          .querySelector(".feedback__company")
+          .textContent.toLowerCase()
+          .trim();
+
+        if (companyFromHashtag !== companyNameFromFeedbackItem) {
+          childNode.remove();
+        }
+      });
+    };
+
+    hashtagListEl.addEventListener("click", clickHandler);
+  }
+)();
